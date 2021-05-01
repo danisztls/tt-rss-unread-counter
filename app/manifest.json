@@ -1,18 +1,16 @@
 {
-  "name": "Über simple bookmark count",
-  "version": "1.2",
-  "manifest_version": 2,
-  "description": "Shows an icon with the bookmark count.",
+  "name": "TT-RSS Unread Counter",
+  "version": "1.0",
+  "manifest_version": 1,
+  "description": "Shows an icon with the unread items counter.",
   "browser_action": {
     "default_icon": "icon-128.png",
-	"default_title": "Click to count your bookmarks"
+	"default_title": "Click to update unread count."
   },
   "icons": {
     "16": "icon-16.png",
     "128": "icon-128.png"
   },
-  "background": { "scripts": ["bmcount.js"] },
-  "permissions": [
-    "bookmarks"
-  ]
+  "background": { "scripts": ["count.js"] },
+  "permissions": []
 }
