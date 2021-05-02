@@ -2,10 +2,11 @@
 ## Todo
 The code for showing the icon is fine but I will have to:
 
-- Write code to get the data ( **n** of unread articles for **user** on **host** )
-- Write a config UI
-- Change the icon
-- Change meta properties of the extension to avoid conflicts with existing extensions (may have to read the documentation)
+- Implement a counter
+- Implement working code to update counter (CORS problems)
+- Implement config UI
+- ~~Update icon~~
+- ~~Update manifest~~ 
 
 ## Get Data
 Route to get number of unred itens:
