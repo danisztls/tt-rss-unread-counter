@@ -12,5 +12,7 @@
     "128": "icon-128.png"
   },
   "background": { "scripts": ["main.js"] },
-  "permissions": []
+  "permissions": [
+    "*://*/tt-rss/*"
+  ]
 }
