@@ -1,24 +1,22 @@
 # TT-RSS Unread Count
-## Todo
+
+This plugin display the count of unread articles for a [TT-RSS](https://tt-rss.org/) **host** and **user**.
+
+Defaults are:
+- host: localhost
+- user: admin
+
+## Development
+### Todo
 The code for showing the icon is fine but I will have to:
 
-- Implement a counter
-- Implement working code to update counter (CORS problems)
+- ~~Write code to get counter~~
+- ~~Write code to display count~~
 - Implement config UI
 - ~~Update icon~~
 - ~~Update manifest~~ 
 
-## Get Data
-Route to get number of unred itens:
+### TT-RSS API
+`https://<host>/tt-rss/public.php?op=getUnread&login=<user>`
 
-https://<host>/public.php?op=getUnread&login=<user>
-
-eg.
-
-https://localhost/tt-rss/public.php?op=getUnread&login=admin
-
-The fetch() function can be used to GET and POSt data from/to an URL. It's a modern replacement for XMLHttpRequest.
-
-Due to CORS policy the request should be made from the same domain. Create a new tab if needed. Plugins API have a way to do that (looks like create new tab).
-
-https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+Returns the number of unread articles and does not require authentication.
