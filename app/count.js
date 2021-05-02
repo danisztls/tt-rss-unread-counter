@@ -1,43 +1,21 @@
-function getMyTree() {
-	chrome.bookmarks.getTree(getCount);
+// Get count of unread itens
+
+// Update UI to display count
+const getUnread = () => {
+    fetch(url)
+        .then(count => response.text())
+    updateUnread(count)
 }
 
-function getCount(nodeArray) {
-	var num_count = countNode(nodeArray);
-	var txt_count = "" + num_count;
-	if (num_count>9999) {
-		txt_count = txt_count.substring(0,2)+"k"+txt_count.substring(2,3);
-	}
-    chrome.browserAction.setBadgeText({text:txt_count});
-    chrome.browserAction.setTitle({title:"" + num_count + " bookmarks (click to refresh)"}); 
+function updateUnread(count) {
+    chrome.browserAction.setBadgeText({text:count})
+    chrome.browserAction.setTitle({title:"" + count + " bookmarks (click to refresh)"})
 }
 
-function countNode(nodeArray) {
-	var count = 0;
-	
-	if (nodeArray instanceof Array) {
-		var i=0;
-		for (i=0; i<nodeArray.length; i++) {
-			count += countNode(nodeArray[i]);
-		}
-		
-	} else {
-		node = nodeArray;
-		console.log(node);
-		
-		if (node.children && node.children.length>0) {
-			count = countNode(node.children);
-			
-		} else {    
-			count = count + 1;
-		}
-	}
-	return (count);
-	
-}
+const host="https://localhost/tt-rss"
+const user="admin"
+const url = host + "/public.php?op=getUnread&login=" + user
 
-
-chrome.browserAction.onClicked.addListener(getMyTree);   
-chrome.browserAction.setBadgeText({text:"."});
-getMyTree();
-
+chrome.browserAction.onClicked.addListener(getUnread)
+chrome.browserAction.setBadgeText({text:"."})
+getUnread()
