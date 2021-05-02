@@ -11,10 +11,19 @@ async function getCount() {
     await updateIcon(count)
 }
 
+// settings
 const host = "https://localhost/tt-rss"
 const user = "admin"
 const url = host + "/public.php?op=getUnread&login=" + user
 
-chrome.browserAction.onClicked.addListener(getCount)
+// create badge
 chrome.browserAction.setBadgeText({text:"."})
-getCount
+
+// update on start
+getCount()
+
+// update on click
+chrome.browserAction.onClicked.addListener(getCount)
+
+// update every 15 minutes (in ms)
+const updateClock = setInterval(getCount, 900000)
