@@ -1,14 +1,15 @@
 // Update UI to display count
-async function updateIcon(count) {
+function updateIcon(count) {
     chrome.browserAction.setBadgeText({text:count})
     chrome.browserAction.setTitle({title:"" + count + " bookmarks (click to refresh)"})
 }
 
 // Update count of unread items
-async function getCount() {
-    let response = await fetch(url)
-    let count = await response.text()
-    await updateIcon(count)
+function getCount() {
+    fetch(url)
+        .then(req => req.text())
+        .then(updateIcon)
+        .catch(console.log) 
 }
 
 // settings
