@@ -2,21 +2,20 @@
 
 This plugin display the count of unread articles for a [TT-RSS](https://tt-rss.org/) **host** and **user**.
 
-Defaults are:
+## Install
+TODO: Upload to Chrome Store
+
+To manually install drag-and-drop `app` folder to `chrome://extensions`. 
+
+## Config
+Edit **host** and **user** to fit your case.
+
+Query URL is: `https://<host>/tt-rss/public.php?op=getUnread&login=<user>`
+
+And defaults are:
+
 - host: localhost
 - user: admin
 
-## Development
-### Todo
-The code for showing the icon is fine but I will have to:
-
-- ~~Write code to get counter~~
-- ~~Write code to display count~~
-- Implement config UI
-- ~~Update icon~~
-- ~~Update manifest~~ 
-
-### TT-RSS API
-`https://<host>/tt-rss/public.php?op=getUnread&login=<user>`
-
-Returns the number of unread articles and does not require authentication.
+## Usage
+Counter will automatically update every 15 minutes or whenever you click on the icon.
