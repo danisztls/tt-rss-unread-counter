@@ -40,6 +40,16 @@ function saveOpts() {
     localStorage.setItem('url', url) // store data
 }
 
+function resetOpts() {
+// TODO: Refactor
+    host = defaults.host
+    localStorage.setItem('host', host)
+    host = defaults.user
+    localStorage.setItem('user', user)
+    // FIXME: Write function
+    updatePlaceholders()
+}
+
 window.onload = function main() {
     // load opts from local storage
     loadOpts()
@@ -54,6 +64,7 @@ window.onload = function main() {
 
     // monitor click event
     document.querySelector('input#opt-save').onclick = saveOpts
+    document.querySelector('input#opt-reset').onclick = resetOpts
 }
 
 // TODO: Upgrade to Manifest v3
