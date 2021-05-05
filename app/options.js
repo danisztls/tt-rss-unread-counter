@@ -1,20 +1,26 @@
 // Declare global variables
 let host, user, url, hostInput, userInput
 
+const defaults = {
+    host: "https://localhost/tt-rss",
+    user: "admin",
+    roteSubString: "/public.php?op=getUnread&login="
+}
+
 // Load opts from local storage
 // TODO: Refactor
 function loadOpts() {
     host = localStorage.getItem('host') // load data
     if (!host) { // set default for null or undefined
-        host = "https://localhost/tt-rss" 
+        host = defaults.host 
     }
 
     user = localStorage.getItem('user')
     if (!user) {
-        user = "admin" 
+        user = defaults.user
     }
 
-    url = host + "/public.php?op=getUnread&login=" + user // reset url
+    url = host + defaults.roteSubString + user // reset url
 }
 
 // Save opts to local storage on click event
@@ -30,7 +36,7 @@ function saveOpts() {
     }
     localStorage.setItem('user', user)
 
-    url = host + "/public.php?op=getUnread&login=" + user // reset url
+    url = host + defaults.roteSubString  + user // reset url
     localStorage.setItem('url', url) // store data
 }
 
