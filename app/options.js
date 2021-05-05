@@ -1,46 +1,37 @@
 // Declare global variables
-let settings = {
-    host: "",
-    user: "",
-    url:  ""
-}
-let hostInput, userInput
+let host, user, url, hostInput, userInput
 
 // Load opts from local storage
+// TODO: Refactor
 function loadOpts() {
-    // load data
-    // FIXME: Object need to be serialized
-    let _settings = localStorage.getItem('settings')
-    if (_settings) {
-        settings = _settings
+    host = localStorage.getItem('host') // load data
+    if (!host) { // set default for null or undefined
+        host = "https://localhost/tt-rss" 
     }
 
-    // set defaults for null or undefined
-    if (!settings.host) {
-        settings.host = "https://localhost/tt-rss" 
+    user = localStorage.getItem('user')
+    if (!user) {
+        user = "admin" 
     }
-    if (!settings.user) {
-        settings.user = "admin" 
-    }
-    // reset url
-    settings.url = settings.host + "/public.php?op=getUnread&login=" + settings.user
+
+    url = host + "/public.php?op=getUnread&login=" + user // reset url
 }
 
 // Save opts to local storage on click event
+// TODO: Refactor
 function saveOpts() {
-    // get data
-    // ignore null or undefined
-    if (hostInput.value != '') {
-        settings.host = hostInput.value
+    if (hostInput.value != '') { // ignore null or undefined
+        host = hostInput.value
     }
-    if (userInput.value != '') {
-        settings.user = userInput.value
-    }
-    // reset url
-    settings.url  = settings.host + "/public.php?op=getUnread&login=" + settings.user
+    localStorage.setItem('host', host)
 
-    // store data
-    localStorage.setItem('settings', settings)
+    if (userInput.value != '') {
+        user = userInput.value
+    }
+    localStorage.setItem('user', user)
+
+    url = host + "/public.php?op=getUnread&login=" + user // reset url
+    localStorage.setItem('url', url) // store data
 }
 
 window.onload = function main() {
@@ -52,8 +43,8 @@ window.onload = function main() {
     userInput = document.querySelector("input#opt-user")
     
     // update placeholders
-    hostInput.placeholder = settings.host
-    userInput.placeholder = settings.user
+    hostInput.placeholder = host
+    userInput.placeholder = user
 
     // monitor click event
     document.querySelector('input#opt-save').onclick = saveOpts
