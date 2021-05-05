@@ -7,6 +7,12 @@ const defaults = {
     roteSubString: "/public.php?op=getUnread&login="
 }
 
+// Update input placeholders
+function updatePlaceholders() {
+    hostInput.placeholder = host
+    userInput.placeholder = user
+}
+
 // Load opts from local storage
 // TODO: Refactor
 function loadOpts() {
@@ -28,25 +34,28 @@ function loadOpts() {
 function saveOpts() {
     if (hostInput.value != '') { // ignore null or undefined
         host = hostInput.value
+        hostInput.value = ""
     }
     localStorage.setItem('host', host)
 
     if (userInput.value != '') {
         user = userInput.value
+        userInput.value = ""
     }
     localStorage.setItem('user', user)
 
     url = host + defaults.roteSubString  + user // reset url
     localStorage.setItem('url', url) // store data
+
+    updatePlaceholders()
 }
 
 function resetOpts() {
 // TODO: Refactor
     host = defaults.host
     localStorage.setItem('host', host)
-    host = defaults.user
+    user = defaults.user
     localStorage.setItem('user', user)
-    // FIXME: Write function
     updatePlaceholders()
 }
 
@@ -59,8 +68,7 @@ window.onload = function main() {
     userInput = document.querySelector("input#opt-user")
     
     // update placeholders
-    hostInput.placeholder = host
-    userInput.placeholder = user
+    updatePlaceholders()
 
     // monitor click event
     document.querySelector('input#opt-save').onclick = saveOpts
