@@ -1,47 +1,48 @@
-// host, user and url variables are declared in background.js
-
-// LIB
-// Get opts from SessionStorage and modify input boxes placeholders on window load
-function getOpts() {
-    // load data
-    try {
-        host = localStorage.getItem('host')
-        user = localStorage.getItem('user')
-    } catch (e) {
-        console.error(e)
-    }
-
-    // update placeholders
-    hostInputElement.setAttribute("placeholder", host)
-    userInputElement.setAttribute("placeholder", user)
-}
+let settings, hostInput, userInput
 
 // Save opts to local storage on click event
 function saveOpts() {
     // get data
-    // FIXME: Check if non empty
-    host = hostInputElement.value
-    user = userInputElement.value
-    url  = host + "/public.php?op=getUnread&login=" + user
+    if (hostInput.value != '') {
+        settings.host = hostInput.value
+    }
+    if (userInput.value != '') {
+        settings.user = userInput.value
+    }
     
-    // save data
-    localStorage.setItem('host', host)
-    localStorage.setItem('user', user)
-    localStorage.setItem('url', url)
+    if (settings.user + settings.host) {
+        settings.url  = settings.host + "/public.php?op=getUnread&login=" + settings.user
+    }
+
+    // store data
+    localStorage.setItem('settings', settings)
 }
 
-// MAIN
 window.onload = function main() {
+    // init object with defaults
+    settings = {
+        host: "https://localhost/tt-rss",
+        user: "admin",
+        url: "https://localhost/tt-rss/public.php?op=getUnread&login=admin"
+    }
+
     // get input elements
-    const hostInputElement = document.querySelector("opt-host")
-    const userInputElement = document.querySelector("opt-user")
+    hostInput = document.querySelector("input#opt-host")
+    userInput = document.querySelector("input#opt-user")
 
     // load stored data
-    getOpts()
+    // FIXME: It's overwriting defaults with blank when no opts are stored
+    settings = localStorage.getItem('settings')
+    
+    // update placeholders
+    hostInput.placeholder = settings.host
+    userInput.placeholder = settings.user
 
     // monitor click event
-    document.querySelector('#opt-save').onclick = saveOpts
+    document.querySelector('input#opt-save').onclick = saveOpts
 }
+
+// TODO: Use a class for settings
 
 // TODO: Upgrade to Manifest v3
 // - Use chrome.storage and sync to save settings
