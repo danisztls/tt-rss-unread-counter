@@ -2,10 +2,6 @@
 
 Display the count of unread articles in [Tiny Tiny RSS](https://tt-rss.org/). A plugin for Chromium browsers.
 
-![Main Page](https://raw.githubusercontent.com/danisztls/tt-rss-unread-counter-plugin/main/img/main-page.png)
-
-![Options Page](https://raw.githubusercontent.com/danisztls/tt-rss-unread-counter-plugin/main/img/options-page.png)
-
 <!-- TOC GFM -->
 
 * [Install](#install)
@@ -13,6 +9,9 @@ Display the count of unread articles in [Tiny Tiny RSS](https://tt-rss.org/). A 
   * [Manually](#manually)
 * [Config](#config)
 * [Usage](#usage)
+* [Screenshots](#screenshots)
+* [Contributing](#contributing)
+* [License](#license)
 
 <!-- /TOC -->
 
@@ -35,3 +34,14 @@ And defaults are:
 
 ## Usage
 Counter will automatically update every 15 minutes or whenever you click on the icon.
+
+## Screenshots
+![Main Page](https://raw.githubusercontent.com/danisztls/tt-rss-unread-counter-plugin/main/img/main-page.png)
+
+![Options Page](https://raw.githubusercontent.com/danisztls/tt-rss-unread-counter-plugin/main/img/options-page.png)
+
+## Contributing
+Found a typo in the documentation or interested in fixing a bug? Then by all means submit an issue or a pull request. If this is your first pull request, it may be helpful to read up on the [GitHub Flow](https://guides.github.com/introduction/flow/).
+
+## License
+Licensed under the [MIT License](https://github.com/danisztls/tt-rss-unread-counter-plugin/main/blob/main/LICENSE).
