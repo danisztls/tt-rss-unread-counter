@@ -1,3 +1,4 @@
+// Lib
 // Update UI to display count
 function updateIcon(count) {
     chrome.browserAction.setBadgeText({text:count})
@@ -12,10 +13,9 @@ function getCount() {
         .catch(console.log) 
 }
 
-// settings
-const host = "https://localhost/tt-rss"
-const user = "admin"
-const url = host + "/public.php?op=getUnread&login=" + user
+// Settings
+// get stored url
+let url = localStorage.getItem('url')
 
 // use default if null
 if (!url) {
@@ -29,6 +29,7 @@ chrome.browserAction.setBadgeText({text:"."})
 // update on start
 getCount()
 
+// Update
 // update on click
 chrome.browserAction.onClicked.addListener(getCount)
 
