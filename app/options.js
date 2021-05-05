@@ -14,7 +14,7 @@ function updatePlaceholders() {
 }
 
 // Load opts from local storage
-// TODO: Refactor
+// TODO: Refactor into a class
 function loadOpts() {
     host = localStorage.getItem('host') // load data
     if (!host) { // set default for null or undefined
@@ -30,7 +30,7 @@ function loadOpts() {
 }
 
 // Save opts to local storage on click event
-// TODO: Refactor
+// TODO: Refactor into a class
 function saveOpts() {
     if (hostInput.value != '') { // ignore null or undefined
         host = hostInput.value
@@ -51,7 +51,7 @@ function saveOpts() {
 }
 
 function resetOpts() {
-// TODO: Refactor
+// TODO: Refactor into a class
     host = defaults.host
     localStorage.setItem('host', host)
     user = defaults.user
@@ -75,5 +75,6 @@ window.onload = function main() {
     document.querySelector('input#opt-reset').onclick = resetOpts
 }
 
-// TODO: Upgrade to Manifest v3
-// - Use chrome.storage and sync to save settings
+// Migration to Manifest v3
+// TODO:"Use chrome.storage.sync
+// https://developer.chrome.com/docs/extensions/mv3/options/
