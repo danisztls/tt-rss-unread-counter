@@ -14,8 +14,11 @@ function getCount() {
 }
 
 // Settings
+// init variables
+let host, user, url
+
 // get stored url
-let url = localStorage.getItem('url')
+url = localStorage.getItem('url')
 
 // use default if null
 if (!url) {
