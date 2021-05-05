@@ -2,13 +2,83 @@
 <html>
   <head>
     <title>TT-RSS Unread Counter Options</title>
+    <style type="text/css">
+      body {
+        zoom: 2;
+        display: grid;
+        place-items: center;
+      }
+      
+      .header {
+        display: inline-flex;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      img {
+        width: 3em;
+        height: 3em;
+        align-self: center;
+        padding-right: 1em;
+      }
+
+      .pane {
+        display: grid;
+        place-items: center;
+      }
+
+      p {
+        margin-bottom: 0.5em;
+      }
+
+      input[type="button"] {
+        display: inline-block;
+        padding: 0.3em 1.2em;
+        margin: 0 0.3em 0.3em 0;
+        border-radius: 1.5em;
+        box-sizing: border-box;
+        border-style: hidden;
+        text-decoration: none;
+        color: white;
+        background-color: darkgray;
+        text-align: center;
+        transition: all 0.2s;
+      }
+
+      #opt-save:hover {
+          background-color: green;
+      }
+
+      #opt-reset:hover{
+        background-color: red;
+      }
+
+      @media all and (max-width:30em){
+        button {
+          display: block;
+            margin: 0.2em auto;
+        }
+      }
+    
+    </style>
   </head>
+
   <body>
+    <div class="header">
+      <img src="icon-128.png">       
+      <h1>Unread Counter Options</h1>
+    </div>
     <div id="custom" class="pane">
-      <p><span>Host</span></p>
-      <input id="opt-host" placeholder="https://localhost/tt-rss"></input>
-      <p><span>User</span></p>
-      <input id="opt-user" placeholder="admin"></input><br><br>
+      <div>
+        <p><span>Host</span></p>
+        <input id="opt-host" placeholder="https://localhost/tt-rss"></input>
+      </div>
+      <div>
+        <p><span>User</span></p>
+        <input id="opt-user" placeholder="admin"></input><br><br>
+      </div>
       <div>
         <input id="opt-reset" type="button" value="Reset"></input>
         <input id="opt-save"  type="button" value="Save"></input>
