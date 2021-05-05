@@ -7,22 +7,22 @@ function updateIcon(count) {
 
 // Update count of unread items
 function getCount() {
-    fetch(url)
+    fetch(getUrl())
         .then(req => req.text())
         .then(updateIcon)
         .catch(console.log) 
 }
 
-// Settings
-// init variables
-let host, user, url
+// Get URL
+function getUrl() {
+    // get stored url
+    let url = localStorage.getItem('url')
 
-// get stored url
-url = localStorage.getItem('url')
-
-// use default if null
-if (!url) {
-    url = "https://localhost/tt-rss/public.php?op=getUnread&login=admin"
+    // use default if null
+    if (!url) {
+        url = "https://localhost/tt-rss/public.php?op=getUnread&login=admin"
+    }
+    return url
 }
 
 // Init
