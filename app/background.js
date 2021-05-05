@@ -17,6 +17,12 @@ const host = "https://localhost/tt-rss"
 const user = "admin"
 const url = host + "/public.php?op=getUnread&login=" + user
 
+// use default if null
+if (!url) {
+    url = "https://localhost/tt-rss/public.php?op=getUnread&login=admin"
+}
+
+// Init
 // create badge
 chrome.browserAction.setBadgeText({text:"."})
 
