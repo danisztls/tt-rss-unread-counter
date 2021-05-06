@@ -1,61 +1,70 @@
-// Declare global variables
-let host, user, url, hostInput, userInput
+// input elements
+const hostInput = document.querySelector("input#opt-host")
+const userInput = document.querySelector("input#opt-user")
+
+// settings objects
+const opts = {
+    host: "",
+    user: "",
+    url: ""
+}
 
 const defaults = {
     host: "https://localhost/tt-rss",
     user: "admin",
+    url: "https://localhost/tt-rss/public.php?op=getUnread&login=admin",
     roteSubString: "/public.php?op=getUnread&login="
 }
 
 // Update input placeholders
 function updatePlaceholders() {
-    hostInput.placeholder = host
-    userInput.placeholder = user
+    hostInput.placeholder = opts.host
+    userInput.placeholder = opts.user
 }
 
 // Load opts from local storage
 // TODO: Refactor into a class
 function loadOpts() {
-    host = localStorage.getItem('host') // load data
-    if (!host) { // set default for null or undefined
-        host = defaults.host 
+    opts.host = localStorage.getItem('host') // load data
+    if (!opts.host) { // set default for null or undefined
+        opts.host = defaults.host 
     }
 
-    user = localStorage.getItem('user')
-    if (!user) {
-        user = defaults.user
+    opts.user = localStorage.getItem('user')
+    if (!opts.user) {
+        opts.user = defaults.user
     }
 
-    url = host + defaults.roteSubString + user // reset url
+    opts.url = opts.host + defaults.roteSubString + opts.user // reset url
 }
 
 // Save opts to local storage on click event
 // TODO: Refactor into a class
 function saveOpts() {
     if (hostInput.value != '') { // ignore null or undefined
-        host = hostInput.value
+        opts.host = hostInput.value
         hostInput.value = ""
     }
-    localStorage.setItem('host', host)
+    localStorage.setItem('host', opts.host)
 
     if (userInput.value != '') {
-        user = userInput.value
+        opts.user = userInput.value
         userInput.value = ""
     }
-    localStorage.setItem('user', user)
+    localStorage.setItem('user', opts.user)
 
-    url = host + defaults.roteSubString  + user // reset url
-    localStorage.setItem('url', url) // store data
+    opts.url = opts.host + defaults.roteSubString  + opts.user // reset url
+    localStorage.setItem('url', opts.url) // store data
 
     updatePlaceholders()
 }
 
 function resetOpts() {
 // TODO: Refactor into a class
-    host = defaults.host
-    localStorage.setItem('host', host)
-    user = defaults.user
-    localStorage.setItem('user', user)
+    opts.host = defaults.host
+    localStorage.setItem('host', opts.host)
+    opts.user = defaults.user
+    localStorage.setItem('user', opts.user)
     updatePlaceholders()
 }
 
@@ -64,8 +73,8 @@ window.onload = function main() {
     loadOpts()
 
     // get input elements
-    hostInput = document.querySelector("input#opt-host")
-    userInput = document.querySelector("input#opt-user")
+    //const hostInput = document.querySelector("input#opt-host")
+    //const userInput = document.querySelector("input#opt-user")
     
     // update placeholders
     updatePlaceholders()
