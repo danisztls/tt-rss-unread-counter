@@ -9,12 +9,12 @@ const inputs = {
 // settings objects
 const opts = {
     host: "",
-    user: "",
+    user: ""
 }
 
 const defaults = {
     host: "https://localhost/tt-rss",
-    user: "admin",
+    user: "admin"
 }
 
 // Update input placeholders
