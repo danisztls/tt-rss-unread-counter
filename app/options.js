@@ -42,24 +42,18 @@ function loadOpts() {
     opts.url = opts.host + defaults.roteSubString + opts.user // reset url
 }
 
-// Save opts to local storage on click event
-// TODO: Refactor into a class
+// Save opts to local storage on click event:w
+function readInput(opt) {
+    if (inputs[opt].value != "") { // ignore null
+        opts[opt] = inputs[opt].value // assign input to opt
+        inputs[opt].value = "" // clear input
+    }
+    localStorage.setItem(opt, opts[opt]) // store opt
+}
+
 function saveOpts() {
-    if (inputs.host.value != '') { // ignore null or undefined
-        opts.host = inputs.host.value
-        inputs.host.value = ""
-    }
-    localStorage.setItem('host', opts.host)
-
-    if (inputs.user.value != '') {
-        opts.user = inputs.user.value
-        inputs.user.value = ""
-    }
-    localStorage.setItem('user', opts.user)
-
-    opts.url = opts.host + defaults.roteSubString  + opts.user // reset url
-    localStorage.setItem('url', opts.url) // store data
-
+    readInput('host')
+    readInput('user')
     updatePlaceholders()
 }
 
