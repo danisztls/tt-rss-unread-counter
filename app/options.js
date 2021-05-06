@@ -1,6 +1,10 @@
 // input elements
-const hostInput = document.querySelector("input#opt-host")
-const userInput = document.querySelector("input#opt-user")
+const inputs = {
+    host:  document.querySelector("input#opt-host"),
+    user:  document.querySelector("input#opt-user"),
+    save:  document.querySelector("input#opt-save"),
+    reset: document.querySelector("input#opt-reset")
+}
 
 // settings objects
 const opts = {
@@ -18,8 +22,8 @@ const defaults = {
 
 // Update input placeholders
 function updatePlaceholders() {
-    hostInput.placeholder = opts.host
-    userInput.placeholder = opts.user
+    inputs.host.placeholder = opts.host
+    inputs.user.placeholder = opts.user
 }
 
 // Load opts from local storage
@@ -41,15 +45,15 @@ function loadOpts() {
 // Save opts to local storage on click event
 // TODO: Refactor into a class
 function saveOpts() {
-    if (hostInput.value != '') { // ignore null or undefined
-        opts.host = hostInput.value
-        hostInput.value = ""
+    if (inputs.host.value != '') { // ignore null or undefined
+        opts.host = inputs.host.value
+        inputs.host.value = ""
     }
     localStorage.setItem('host', opts.host)
 
-    if (userInput.value != '') {
-        opts.user = userInput.value
-        userInput.value = ""
+    if (inputs.user.value != '') {
+        opts.user = inputs.user.value
+        inputs.user.value = ""
     }
     localStorage.setItem('user', opts.user)
 
@@ -71,17 +75,13 @@ function resetOpts() {
 window.onload = function main() {
     // load opts from local storage
     loadOpts()
-
-    // get input elements
-    //const hostInput = document.querySelector("input#opt-host")
-    //const userInput = document.querySelector("input#opt-user")
     
     // update placeholders
     updatePlaceholders()
 
     // monitor click event
-    document.querySelector('input#opt-save').onclick = saveOpts
-    document.querySelector('input#opt-reset').onclick = resetOpts
+    inputs.save.onclick = saveOpts
+    inputs.reset.onclick = resetOpts
 }
 
 // Migration to Manifest v3
