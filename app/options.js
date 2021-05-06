@@ -51,14 +51,16 @@ function saveOpts() {
     updatePlaceholders()
 }
 
+// Reset opts
+function resetOpt(opt) {
+    opts[opt] = defaults[opt]
+    localStorage.setItem(opt, opts[opt])
+    inputs[opt].value = "" // clear input
+}
+
 function resetOpts() {
-// TODO: Refactor into a class
-    opts.host = defaults.host
-    localStorage.setItem('host', opts.host)
-    inputs.host.value = "" // clear input
-    opts.user = defaults.user
-    localStorage.setItem('user', opts.user)
-    inputs.user.value = "" // clear input
+    resetOpt('host')
+    resetOpt('user')
     updatePlaceholders()
 }
 
