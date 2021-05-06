@@ -24,17 +24,16 @@ function updatePlaceholders() {
 }
 
 // Load opts from local storage
-// TODO: Refactor into a class
-function loadOpts() {
-    opts.host = localStorage.getItem('host') // load data
-    if (!opts.host) { // set default for null or undefined
-        opts.host = defaults.host 
+function loadOpt(opt) {
+    opts[opt] = localStorage.getItem(opt) // load data
+    if (!opts[opt]) { // set default for null or undefined
+        opts[opt] = defaults[opt] 
     }
+}
 
-    opts.user = localStorage.getItem('user')
-    if (!opts.user) {
-        opts.user = defaults.user
-    }
+function loadOpts() {
+    loadOpt('host')
+    loadOpt('user')
 }
 
 // Save opts to local storage on click event:w
