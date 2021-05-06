@@ -15,11 +15,13 @@ function getCount() {
 
 // Get URL
 function getUrl() {
-    // get stored url
-    let url = localStorage.getItem('url')
+    // get stored opts
+    let host = localStorage.getItem('host')
+    let user = localStorage.getItem('user')
+    let url  = host + "/public.php?op=getUnread&login=" + user // reset url
 
-    // use default if null
-    if (!url) {
+    // use default host or user is null
+    if (host & user) {
         url = "https://localhost/tt-rss/public.php?op=getUnread&login=admin"
     }
     return url

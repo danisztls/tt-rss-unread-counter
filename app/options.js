@@ -10,14 +10,11 @@ const inputs = {
 const opts = {
     host: "",
     user: "",
-    url: ""
 }
 
 const defaults = {
     host: "https://localhost/tt-rss",
     user: "admin",
-    url: "https://localhost/tt-rss/public.php?op=getUnread&login=admin",
-    roteSubString: "/public.php?op=getUnread&login="
 }
 
 // Update input placeholders
@@ -38,8 +35,6 @@ function loadOpts() {
     if (!opts.user) {
         opts.user = defaults.user
     }
-
-    opts.url = opts.host + defaults.roteSubString + opts.user // reset url
 }
 
 // Save opts to local storage on click event:w
