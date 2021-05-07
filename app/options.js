@@ -2,23 +2,21 @@ class Setting {
     constructor(name, defaults) {
         this.name = name
         this.defaults = defaults
-        this.input = document.querySelector("input#opt-" + this.name)
+        this.input = document.querySelector("#opt-" + this.name)
         this.value = this.load()
     }
 
     load() {
-        console.log(this.name) //print
         let value = localStorage.getItem(this.name) // load data
         if (!value) { // set default for null or undefined
             value = this.defaults
         }
-        console.log(this.value) //print
         return value
     }
 
     save() {
         if (this.input.value != "") { // ignore null
-            this.value = this.input.value // assign input to opt
+            this.value = this.input.value.toString() // assign input to opt
             this.input.value = "" // clear input
         }
         localStorage.setItem(this.name, this.value) // store opt
@@ -33,6 +31,8 @@ class Setting {
     
 let host = new Setting('host', "https://localhost/tt-rss")
 let user = new Setting('user', "admin")
+let mode = new Setting('mode', "all")
+let interval = new Setting('interval', "15")
 
 function updatePlaceholders() {
     host.input.placeholder = host.value
@@ -41,12 +41,16 @@ function updatePlaceholders() {
 function saveOpts() {
     host.save()
     user.save()
+    mode.save()
+    interval.save()
     updatePlaceholders()
 }
 
 function resetOpts() {
     host.reset()
     user.reset()
+    mode.reset()
+    interval.reset()
     updatePlaceholders()
 }
 
@@ -54,8 +58,8 @@ window.onload = function main() {
     updatePlaceholders()
 
     // monitor click event
-    document.querySelector("input#opt-save").onclick = saveOpts
-    document.querySelector("input#opt-reset").onclick = resetOpts
+    document.querySelector("#opt-save").onclick = saveOpts
+    document.querySelector("#opt-reset").onclick = resetOpts
 }
 
 // Migration to Manifest v3

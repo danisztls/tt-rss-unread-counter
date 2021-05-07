@@ -29,8 +29,10 @@
         place-items: center;
       }
 
-      p {
-        margin-bottom: 0.5em;
+      label {
+        display: block;
+        padding-top: 1em;
+        padding-bottom: 0.2em;
       }
 
       input[type="button"] {
@@ -70,18 +72,29 @@
       <img src="icon-128.png">       
       <h1>Unread Counter Options</h1>
     </div>
-    <div id="custom" class="pane">
+    <div class="pane">
       <div>
-        <p><span>Host</span></p>
-        <input id="opt-host" placeholder="https://localhost/tt-rss"></input>
+        <label for="opt-host">Host</label>
+        <input id="opt-host" ty[e="url" placeholder="https://localhost/tt-rss">
       </div>
       <div>
-        <p><span>User</span></p>
-        <input id="opt-user" placeholder="admin"></input><br><br>
+        <label for="opt-user">User</label>
+        <input id="opt-user" type="text" placeholder="admin"><br>
       </div>
       <div>
-        <input id="opt-reset" type="button" value="Reset"></input>
-        <input id="opt-save"  type="button" value="Save"></input>
+        <label for="opt-mode">Article mode</label>
+        <select id="opt-mode" type="text">
+            <option value="all" selected="yes">All</option>
+            <option value="fresh">Fresh</option>
+        </select> 
+      </div>
+      <div>
+        <label for="opt-interval">Interval (min)</label>
+        <input id="opt-interval" type="number" placeholder=15 min=1 max=60><br><br> 
+      </div>
+      <div>
+        <input id="opt-reset" type="button" value="Reset">
+        <input id="opt-save"  type="button" value="Save">
       </div>
     </div>
   </body>
