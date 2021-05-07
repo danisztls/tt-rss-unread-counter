@@ -1,6 +1,17 @@
-// Lib
+// LIB
 // Update UI to display count
 function updateIcon(count) {
+    // replace last 3 zeros with a K
+    if (count.length >= 4) {
+        count = count.slice(0,-3) + "K"
+    }
+
+    // hide label if zero
+    if (count == "0") {
+        count = ""
+    }
+
+    // update
     chrome.browserAction.setBadgeText({text:count})
     chrome.browserAction.setTitle({title:"" + count + " bookmarks (click to refresh)"})
 }
@@ -27,10 +38,7 @@ function getUrl() {
     return url
 }
 
-// Init
-// create badge
-chrome.browserAction.setBadgeText({text:"."})
-
+// MAIN
 // update on start
 getCount()
 
