@@ -1,3 +1,5 @@
+/* global chrome */
+
 // LIB
 // Update UI to display count
 function updateIcon(count) {

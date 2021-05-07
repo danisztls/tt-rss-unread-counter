@@ -1,0 +1,26 @@
+{
+  "name": "tt-rss-unread-counter-plugin-helper",
+  "version": "1.0.0",
+  "description": "DevOps helper for TT-RSS Unread Counter Plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No test is especified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/danisztls/tt-rss-unread-counter-plugin.git"
+  },
+  "author": "danisztls",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danisztls/tt-rss-unread-counter-plugin/issues"
+  },
+  "homepage": "https://github.com/danisztls/tt-rss-unread-counter-plugin#readme",
+  "devDependencies": {
+    "eslint": "^7.25.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1"
+  }
+}

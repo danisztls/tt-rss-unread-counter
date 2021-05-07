@@ -1,3 +1,5 @@
+/* global chrome */
+
 class Setting {
     constructor(name, defaults) {
         this.name = name
