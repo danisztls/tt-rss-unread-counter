@@ -7,8 +7,15 @@ function updateIcon(count) {
     }
 
     // hide label if zero
-    if (count == "0") {
+    if (count == '0') {
         count = ""
+    }
+
+    //
+    if (count == 'error') {
+        chrome.browserAction.setBadgeBackgroundColor({color:"#ef3b3b"})
+    } else {
+        chrome.browserAction.setBadgeBackgroundColor({color:"#3b86ef"})
     }
 
     // update
@@ -21,7 +28,7 @@ function getCount() {
     fetch(getUrl())
         .then(req => req.text())
         .then(updateIcon)
-        .catch(console.log) 
+        .catch(updateIcon('error')) 
 }
 
 // Get URL
