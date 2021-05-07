@@ -34,20 +34,16 @@ class Setting {
 let host = new Setting('host', "https://localhost/tt-rss")
 let user = new Setting('user', "admin")
 
-// Update input placeholders
 function updatePlaceholders() {
     host.input.placeholder = host.value
     user.input.placeholder = user.value
 }
-
-// Save opts to local storage on click event
 function saveOpts() {
     host.save()
     user.save()
     updatePlaceholders()
 }
 
-// Reset opts
 function resetOpts() {
     host.reset()
     user.reset()
@@ -55,7 +51,6 @@ function resetOpts() {
 }
 
 window.onload = function main() {
-    // update placeholders
     updatePlaceholders()
 
     // monitor click event
