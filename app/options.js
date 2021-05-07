@@ -1,81 +1,68 @@
-// input elements
-const inputs = {
-    host:  document.querySelector("input#opt-host"),
-    user:  document.querySelector("input#opt-user"),
-    save:  document.querySelector("input#opt-save"),
-    reset: document.querySelector("input#opt-reset")
-}
+class Setting {
+    constructor(name, defaults) {
+        this.name = name
+        this.defaults = defaults
+        this.input = document.querySelector("input#opt-" + this.name)
+        this.value = this.load()
+    }
 
-// settings objects
-const opts = {
-    host: "",
-    user: ""
-}
+    load() {
+        console.log(this.name) //print
+        let value = localStorage.getItem(this.name) // load data
+        if (!value) { // set default for null or undefined
+            value = this.defaults
+        }
+        console.log(this.value) //print
+        return value
+    }
 
-const defaults = {
-    host: "https://localhost/tt-rss",
-    user: "admin"
+    save() {
+        if (this.input.value != "") { // ignore null
+            this.value = this.input.value // assign input to opt
+            this.input.value = "" // clear input
+        }
+        localStorage.setItem(this.name, this.value) // store opt
+    }
+
+    reset() {
+        this.value = this.defaults
+        localStorage.setItem(this.name, this.value)
+        this.input.value = "" // clear input
+    }
 }
+    
+let host = new Setting('host', "https://localhost/tt-rss")
+let user = new Setting('user', "admin")
 
 // Update input placeholders
 function updatePlaceholders() {
-    inputs.host.placeholder = opts.host
-    inputs.user.placeholder = opts.user
+    host.input.placeholder = host.value
+    user.input.placeholder = user.value
 }
 
-// Load opts from local storage
-function loadOpt(opt) {
-    opts[opt] = localStorage.getItem(opt) // load data
-    if (!opts[opt]) { // set default for null or undefined
-        opts[opt] = defaults[opt] 
-    }
-}
-
-function loadOpts() {
-    loadOpt('host')
-    loadOpt('user')
-}
-
-// Save opts to local storage on click event:w
-function readInput(opt) {
-    if (inputs[opt].value != "") { // ignore null
-        opts[opt] = inputs[opt].value // assign input to opt
-        inputs[opt].value = "" // clear input
-    }
-    localStorage.setItem(opt, opts[opt]) // store opt
-}
-
+// Save opts to local storage on click event
 function saveOpts() {
-    readInput('host')
-    readInput('user')
+    host.save()
+    user.save()
     updatePlaceholders()
 }
 
 // Reset opts
-function resetOpt(opt) {
-    opts[opt] = defaults[opt]
-    localStorage.setItem(opt, opts[opt])
-    inputs[opt].value = "" // clear input
-}
-
 function resetOpts() {
-    resetOpt('host')
-    resetOpt('user')
+    host.reset()
+    user.reset()
     updatePlaceholders()
 }
 
 window.onload = function main() {
-    // load opts from local storage
-    loadOpts()
-    
     // update placeholders
     updatePlaceholders()
 
     // monitor click event
-    inputs.save.onclick = saveOpts
-    inputs.reset.onclick = resetOpts
+    document.querySelector("input#opt-save").onclick = saveOpts
+    document.querySelector("input#opt-reset").onclick = resetOpts
 }
 
 // Migration to Manifest v3
-// TODO:"Use chrome.storage.sync
+// TODO: Use chrome.storage.sync
 // https://developer.chrome.com/docs/extensions/mv3/options/
