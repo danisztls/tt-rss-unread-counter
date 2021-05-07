@@ -1,24 +1,23 @@
 // LIB
 // Update UI to display count
 function updateIcon(count) {
-    // replace last 3 zeros with a K
-    if (count.length >= 4) {
-        count = count.slice(0,-3) + "K"
-    }
-
-    // hide label if zero
-    if (count == '0') {
-        count = ""
-    }
-
-    //
-    if (count == 'error') {
+    // set color
+    if (count == 'error') { // red on error 
         chrome.browserAction.setBadgeBackgroundColor({color:"#ef3b3b"})
-    } else {
+    } else { // blue otherwise
         chrome.browserAction.setBadgeBackgroundColor({color:"#3b86ef"})
-    }
 
-    // update
+        // replace 1000 with K
+        if (count.length >= 4) {
+            count = count.slice(0,-3) + "K"
+        } else {
+            // hide label if zero
+            if (count == '0') {
+                count = ""
+            }
+        }
+
+    // update badge
     chrome.browserAction.setBadgeText({text:count})
     chrome.browserAction.setTitle({title:"" + count + " bookmarks (click to refresh)"})
 }
