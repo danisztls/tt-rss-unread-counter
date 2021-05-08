@@ -1,8 +1,8 @@
 /* global chrome */
 // TODO: Use Service Worker to migrate to manifest v3
 
-// Declare globals
-const opts = { // fill nulls with defaults
+// Defaults
+const opts = {
   url:      null, 
   host:     "https://localhost/tt-rss",
   user:     "admin",
@@ -35,7 +35,7 @@ function listen() {
   chrome.browserAction.onClicked.addListener(getCount)
 
   // update every x (in ms)
-  const updateClock = setInterval(getCount, opts.interval)
+  setInterval(getCount, opts.interval)
 }
 
 function setOpts(stored) {
@@ -44,47 +44,47 @@ function setOpts(stored) {
   opts.mode = stored.mode
 }
 
-
-// Update count
 function getCount() {
-    if (opts.url == null) {
-      throw "URL is null"
-    }
-  
     fetch(opts.url)
         .then(y => y.text())
         .then(y => y.split(';')) 
-        .then(updateIcon, updateIcon('error')) // args: [All, Fresh]
+        .then(updateUI) // args: [All, Fresh]
+        .catch(console.log)
 }
 
-// Update UI
-function updateIcon(count) {
-  // FIXME: color is flicking on update
-  // set color
-  if (count == 'error') { // red on error 
-        chrome.browserAction.setBadgeBackgroundColor({color:"#ef3b3b"})
-    } else { // blue otherwise
-        chrome.browserAction.setBadgeBackgroundColor({color:"#3b86ef"})
-  
-        // count is [unreadAll];[unreadFresh]
-        if (opts.mode == 'fresh') {
-          count = count[1]
-        } else {
-          count = count[0]
-        }
+function updateUI(count) {
+  try {
+    if (count.length == 2) { // count is [unreadAll];[unreadFresh]
 
-        // replace 1000 with K
-        if (count.length >= 4) {
-            count = count.slice(0,-3) + "K"
-        } else {
-            // hide label if zero
-            if (count == '0') {
-                count = null
-            }
-        }
+      if (opts.mode == 'fresh') {
+        count = count[1]
+      } else {
+        count = count[0]
+      }
 
-    // update badge
-    chrome.browserAction.setBadgeText({text:count})
-    chrome.browserAction.setTitle({title:"" + count + " bookmarks (click to refresh)"})
+      // replace 1000 with K
+      if (count.length >= 4) {
+          count = count.slice(0,-3) + "K"
+      } else {
+          // hide label if zero
+          if (count == '0') {
+              count = null
+          }
+      }
+
+      chrome.browserAction.setBadgeBackgroundColor({color:"#3b86ef"}) // blue
+    } else {
+      count = "error"
+      throw(count)
     }
+  }
+
+  catch (e) {
+    console.log(e)
+    chrome.browserAction.setBadgeBackgroundColor({color:"#ef3b3b"}) // red
+  }
+
+  // update badge
+  chrome.browserAction.setBadgeText({text:count})
+  chrome.browserAction.setTitle({title:"" + count + " bookmarks (click to refresh)"})
 }
