@@ -1,7 +1,32 @@
 /* global chrome */
+// TODO: Use Service Worker to migrate to manifest v3
 
-// LIB
+// Update count of unread items
+function getCount() {
+    fetch(url)
+        .then(y => y.text())
+        .then(y => y.split(';')) 
+        .then(updateIcon) // args: [All, Fresh]
+        .catch(updateIcon('error')) 
+}
+
+// Getter for chrome.storage
+let url, interval, mode
+chrome.storage.sync.get({ // fill nulls with defaults
+    host:     "https://localhost/tt-rss",
+    user:     "admin",
+    mode:     "all",
+    interval: "15",
+}, function(opts) {
+    url = opts.host + "/public.php?op=getUnread&fresh=1&login=" + opts.user // reset url
+    interval = opts.interval
+    mode = opts.mode
+})
+
+// TODO: Create a listener
+
 // Update UI to display count
+// TODO: Use interval and mode
 function updateIcon(count) {
     // set color
     if (count == 'error') { // red on error 
@@ -22,28 +47,7 @@ function updateIcon(count) {
     // update badge
     chrome.browserAction.setBadgeText({text:count})
     chrome.browserAction.setTitle({title:"" + count + " bookmarks (click to refresh)"})
-}
-
-// Update count of unread items
-function getCount() {
-    fetch(getUrl())
-        .then(req => req.text())
-        .then(updateIcon)
-        .catch(updateIcon('error')) 
-}
-
-// Get URL
-function getUrl() {
-    // get stored opts
-    let host = localStorage.getItem('host')
-    let user = localStorage.getItem('user')
-    let url  = host + "/public.php?op=getUnread&login=" + user // reset url
-
-    // use default host or user is null
-    if (host & user) {
-        url = "https://localhost/tt-rss/public.php?op=getUnread&login=admin"
     }
-    return url
 }
 
 // MAIN
