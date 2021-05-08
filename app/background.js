@@ -16,7 +16,7 @@ chrome.storage.sync.get({ // fill nulls with defaults
     host:     "https://localhost/tt-rss",
     user:     "admin",
     mode:     "all",
-    interval: "15",
+    interval: 15,
 }, function(opts) {
     url = opts.host + "/public.php?op=getUnread&fresh=1&login=" + opts.user // reset url
     interval = opts.interval
@@ -26,8 +26,14 @@ chrome.storage.sync.get({ // fill nulls with defaults
 // TODO: Create a listener
 
 // Update UI to display count
-// TODO: Use interval and mode
 function updateIcon(count) {
+    // count is [unreadAll];[unreadFresh]
+    if (mode == 'fresh') {
+      count = count[1]
+    } else {
+      count = count[0]
+    }
+
     // set color
     if (count == 'error') { // red on error 
         chrome.browserAction.setBadgeBackgroundColor({color:"#ef3b3b"})
@@ -59,4 +65,4 @@ getCount()
 chrome.browserAction.onClicked.addListener(getCount)
 
 // update every 15 minutes (in ms)
-const updateClock = setInterval(getCount, 900000)
+const updateClock = setInterval(getCount, interval * 60000 )
