@@ -1,44 +1,77 @@
 /* global chrome */
 // TODO: Use Service Worker to migrate to manifest v3
 
-// Update count of unread items
-function getCount() {
-    fetch(url)
-        .then(y => y.text())
-        .then(y => y.split(';')) 
-        .then(updateIcon) // args: [All, Fresh]
-        .catch(updateIcon('error')) 
+// Declare globals
+const opts = { // fill nulls with defaults
+  url:      null, 
+  host:     "https://localhost/tt-rss",
+  user:     "admin",
+  mode:     "all",
+  interval: 15,
 }
 
-// Getter for chrome.storage
-let url, interval, mode
-chrome.storage.sync.get({ // fill nulls with defaults
-    host:     "https://localhost/tt-rss",
-    user:     "admin",
-    mode:     "all",
-    interval: 15,
-}, function(opts) {
-    url = opts.host + "/public.php?op=getUnread&fresh=1&login=" + opts.user // reset url
-    interval = opts.interval
-    mode = opts.mode
-})
+init()
 
-// TODO: Create a listener
+function init() {
+  const storageOpts = new Promise((resolve, reject) => {
+      try {
+        chrome.storage.sync.get(opts, resolve)
+      } catch (e) {
+        reject(e)
+      }
+  })
+  
+  storageOpts
+    .then(setOpts)
+    .then(getCount)
+    .then(listen)
+    .catch(console.log)
+}
 
-// Update UI to display count
-function updateIcon(count) {
-    // count is [unreadAll];[unreadFresh]
-    if (mode == 'fresh') {
-      count = count[1]
-    } else {
-      count = count[0]
+function listen() {
+  // TODO: Create a listener for chrome.storage
+  
+  // update on click
+  chrome.browserAction.onClicked.addListener(getCount)
+
+  // update every x (in ms)
+  const updateClock = setInterval(getCount, opts.interval)
+}
+
+function setOpts(stored) {
+  opts.url = stored.host + "/public.php?op=getUnread&fresh=1&login=" + stored.user // set url
+  opts.interval = stored.interval * 60000 // convert min to ms
+  opts.mode = stored.mode
+}
+
+
+// Update count
+function getCount() {
+    if (opts.url == null) {
+      throw "URL is null"
     }
+  
+    fetch(opts.url)
+        .then(y => y.text())
+        .then(y => y.split(';')) 
+        .then(updateIcon, updateIcon('error')) // args: [All, Fresh]
+}
 
-    // set color
-    if (count == 'error') { // red on error 
+// Update UI
+function updateIcon(count) {
+  // FIXME: color is flicking on update
+  // set color
+  if (count == 'error') { // red on error 
         chrome.browserAction.setBadgeBackgroundColor({color:"#ef3b3b"})
     } else { // blue otherwise
         chrome.browserAction.setBadgeBackgroundColor({color:"#3b86ef"})
+  
+        // count is [unreadAll];[unreadFresh]
+        if (opts.mode == 'fresh') {
+          count = count[1]
+        } else {
+          count = count[0]
+        }
 
         // replace 1000 with K
         if (count.length >= 4) {
@@ -46,7 +79,7 @@ function updateIcon(count) {
         } else {
             // hide label if zero
             if (count == '0') {
-                count = ""
+                count = null
             }
         }
 
@@ -55,14 +88,3 @@ function updateIcon(count) {
     chrome.browserAction.setTitle({title:"" + count + " bookmarks (click to refresh)"})
     }
 }
-
-// MAIN
-// update on start
-getCount()
-
-// Update
-// update on click
-chrome.browserAction.onClicked.addListener(getCount)
-
-// update every 15 minutes (in ms)
-const updateClock = setInterval(getCount, interval * 60000 )
