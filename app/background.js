@@ -95,6 +95,11 @@ function updateUI (count) {
   }
 
   // update badge
-  chrome.browserAction.setBadgeText({ text: count })
-  chrome.browserAction.setTitle({ title: '' + count + ' bookmarks (click to refresh)' })
+  if (count === '0') { // hide label if zero
+    chrome.browserAction.setBadgeText({ text: null })
+    chrome.browserAction.setTitle({ title: 'No unread articles. Click to refresh.' })
+  } else {
+    chrome.browserAction.setBadgeText({ text: count })
+    chrome.browserAction.setTitle({ title: count + ' unread articles. Click to refresh.' })
+  }
 }
