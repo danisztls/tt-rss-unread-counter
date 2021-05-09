@@ -7,7 +7,7 @@ const opts = {
   host: 'https://localhost/tt-rss',
   user: 'admin',
   mode: 'all',
-  interval: 15
+  interval: 5
 }
 
 init()
@@ -77,11 +77,6 @@ function updateUI (count) {
       // replace 1000 with K
       if (count.length >= 4) {
         count = count.slice(0, -3) + 'K'
-      } else {
-        // hide label if zero
-        if (count === '0') {
-          count = null
-        }
       }
 
       chrome.browserAction.setBadgeBackgroundColor({ color: '#3b86ef' }) // blue

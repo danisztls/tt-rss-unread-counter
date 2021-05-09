@@ -6,7 +6,7 @@ const defaults = {
   host: 'https://localhost/tt-rss',
   user: 'admin',
   mode: 'all',
-  interval: 15
+  interval: 5
 }
 
 class Setting {
