@@ -76,6 +76,7 @@ function getOpts (query) {
 async function setOpt (data) {
   for (const opt of settings) {
     opt.set(data[opt.name])
+    opt.clear()
   }
 }
 
