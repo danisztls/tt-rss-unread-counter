@@ -38,10 +38,23 @@ function listen () {
   setInterval(getCount, opts.interval)
 }
 
-function setOpts (stored) {
-  opts.url = stored.host + '/public.php?op=getUnread&fresh=1&login=' + stored.user // set url
-  opts.interval = stored.interval * 60000 // convert min to ms
-  opts.mode = stored.mode
+function setOpts (data) {
+  opts.url = data.host + '/public.php?op=getUnread&fresh=1&login=' + data.user // set url
+  opts.interval = data.interval * 60000 // convert min to ms
+  opts.mode = data.mode
+
+  // check if opts are valid
+  if (opts.url.slice(0, 4) !== 'http') {
+    throw new Error('URL is invalid.')
+  }
+
+  if (opts.interval < 60000) {
+    throw new Error('Interval is less than a minute and thus invalid.')
+  }
+
+  if (opts.mode !== 'fresh' & opts.mode !== 'all') {
+    throw new Error('Article mode is invalid.')
+  }
 }
 
 function getCount () {
