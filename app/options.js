@@ -29,7 +29,7 @@ class Setting {
 
   // read value from input field
   read () {
-    if (this.input.value != null) { // ignore null
+    if (this.input.value !== '' & this.input.value != null) { // ignore null
       this.set(this.input.value)
       this.clear()
     }
@@ -87,6 +87,7 @@ function saveOpts () {
     const name = data[0]
     const value = data[1]
     payload[name] = value
+    opt.clear()
   }
   chrome.storage.sync.set(payload) // store opt
 }
