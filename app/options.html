@@ -35,25 +35,28 @@
         padding-bottom: 0.2em;
       }
 
-      input[type="button"] {
+      #opt-save, #opt-reset {
         display: inline-block;
         padding: 0.3em 1.2em;
-        margin: 0 0.3em 0.3em 0;
+        margin: 1.5em 0.3em 0.3em 0;
         border-radius: 1.5em;
         box-sizing: border-box;
         border-style: hidden;
         text-decoration: none;
         color: white;
-        background-color: darkgray;
         text-align: center;
         transition: all 0.2s;
       }
 
-      #opt-save:hover {
-          background-color: green;
+      #opt-save:hover, #opt-reset:hover {
+        filter: grayscale(0.5);
+      }
+      
+      #opt-save {
+        background-color: forestgreen;
       }
 
-      #opt-reset:hover{
+      #opt-reset{
         background-color: red;
       }
 
@@ -83,7 +86,7 @@
       </div>
       <div>
         <label for="opt-user">User</label>
-        <input id="opt-user" name="User name" type="text" ><br>
+        <input id="opt-user" name="User name" type="text">
       </div>
       <div>
         <label for="opt-mode">Article mode</label>
@@ -94,9 +97,8 @@
       </div>
       <div>
         <label for="opt-interval">Interval (min)</label>
-        <input id="opt-interval" name="Interval duration" type="number" min=1 max=60><br>
+        <input id="opt-interval" name="Interval duration" type="number" min=1 max=60>
       </div>
-      <br>
       <div>
         <input id="opt-reset" type="button" value="Reset">
         <input id="opt-save"  type="button" value="Save">
