@@ -5,7 +5,7 @@
 const defaults = {
   host: 'https://localhost/tt-rss',
   user: 'admin',
-  mode: 'all',
+  mode: 0,
   interval: 5
 }
 
@@ -16,22 +16,24 @@ class Setting {
     this.input = document.querySelector('#opt-' + this.name)
   }
 
-  // set value
-  set (value) {
-    this.value = value
-  }
-
   // update placeholder and clear input field
   clear () {
-    this.input.placeholder = this.value
-    this.input.value = '' // clear input
+    if (this.input.type !== 'select-one') {
+      this.input.placeholder = this.value
+      this.input.value = null // clear input
+    } else {
+      this.input.options[this.value].selected = true
+    }
   }
 
   // read value from input field
   read () {
     if (this.input.value !== '' & this.input.value != null) { // ignore null
-      this.set(this.input.value)
+      this.value = this.input.value
       this.clear()
+    }
+    if (this.input.type === 'select-one') {
+      this.value = parseInt(this.value)
     }
     return [this.name, this.value]
   }
@@ -75,7 +77,7 @@ function getOpts (query) {
 // Set value for each option
 async function setOpt (data) {
   for (const opt of settings) {
-    opt.set(data[opt.name])
+    opt.value = data[opt.name]
     opt.clear()
   }
 }

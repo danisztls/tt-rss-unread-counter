@@ -6,7 +6,7 @@ const opts = {
   url: null,
   host: 'https://localhost/tt-rss',
   user: 'admin',
-  mode: 'all',
+  mode: 0,
   interval: 5
 }
 
@@ -52,7 +52,7 @@ function setOpts (data) {
     throw new Error('Interval is less than a minute and thus invalid.')
   }
 
-  if (opts.mode !== 'fresh' & opts.mode !== 'all') {
+  if (isNaN(opts.mode) === false) {
     throw new Error('Article mode is invalid.')
   }
 }
@@ -68,7 +68,7 @@ function getCount () {
 function updateUI (count) {
   try {
     if (count.length === 2) { // count is [unreadAll];[unreadFresh]
-      if (opts.mode === 'fresh') {
+      if (opts.mode === 1) { // 0 is all, 1 is fresh
         count = count[1]
       } else {
         count = count[0]
