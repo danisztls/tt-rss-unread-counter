@@ -31,8 +31,19 @@ function init () {
 function listen () {
   // TODO: Create a listener for chrome.storage
 
-  // update on click
-  chrome.browserAction.onClicked.addListener(getCount)
+  // listen for commands
+  // FIXME: Apparently not working. Check for samples.
+  chrome.commands.onCommand.addListener(function (command) {
+    console.log('Command: ' + command)
+    if (command === 'update') {
+      getCount()
+    } else if (command === 'open') {
+      openPage()
+    }
+  })
+
+  // listen for badge click
+  chrome.browserAction.onClicked.addListener(openPage)
 
   // update every x (in ms)
   setInterval(getCount, opts.interval)
