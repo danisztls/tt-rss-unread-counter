@@ -57,14 +57,17 @@ function setOpts (data) {
 
   // check if opts are valid
   if (opts.host.slice(0, 4) !== 'http') {
+    chrome.runtime.openOptionsPage()
     throw new Error('Host is invalid.')
   }
 
   if (opts.interval < 60000) {
+    chrome.runtime.openOptionsPage()
     throw new Error('Interval is less than a minute and thus invalid.')
   }
 
   if (isNaN(opts.mode) === false) {
+    chrome.runtime.openOptionsPage()
     throw new Error('Article mode is invalid.')
   }
 }
