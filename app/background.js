@@ -24,15 +24,16 @@ function init () {
   storageOpts
     .then(setOpts)
     .then(getCount)
-    .then(listen)
     .catch(console.log)
+
+  listenEvents()
 }
 
-function listen () {
+function listenEvents () {
   // TODO: Create a listener for chrome.storage
+  // listen for changes in settings
 
   // listen for commands
-  // FIXME: Apparently not working. Check for samples.
   chrome.commands.onCommand.addListener(function (command) {
     console.log('Command: ' + command)
     if (command === 'update') {
@@ -104,24 +105,25 @@ function updateUI (count) {
     chrome.browserAction.setBadgeBackgroundColor({ color: '#ef3b3b' }) // red
   }
 
+  // construct date string
+  const updateTime = new Date().toTimeString().slice(0, 8) // hh:mm:ss (local time)
+
   // update badge
-  if (count === '0') { // hide label if zero
+  if (count === '0') { // hide badge if zero
     chrome.browserAction.setBadgeText({ text: null })
-    chrome.browserAction.setTitle({ title: 'No unread articles. Click to refresh.' })
+    chrome.browserAction.setTitle({ title: 'No unread articles. Updated at ' + updateTime })
   } else {
     chrome.browserAction.setBadgeText({ text: count })
-    chrome.browserAction.setTitle({ title: count + ' unread articles. Click to refresh.' })
+    chrome.browserAction.setTitle({ title: count + ' unread articles. Updated at ' + updateTime })
   }
 }
 
 function openPage () {
-  // FIXME: not working
-  // -3 is fresh, -4 is all
   let feedURL
   if (opts.mode === 1) {
-    feedURL = opts.host + '/#f=-3&c=0'
+    feedURL = opts.host + '/#f=-3&c=0' // -3 is fresh
   } else {
-    feedURL = opts.host + '/#f=-4&c=0'
+    feedURL = opts.host + '/#f=-4&c=0' // -4 is all
   }
   chrome.tabs.create({ url: feedURL })
 }
