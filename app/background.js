@@ -1,7 +1,7 @@
 /* global chrome */
 // TODO: Use Service Worker to migrate to manifest v3
 
-// Defaults
+// Set defaults
 const opts = {
   host: 'https://localhost/tt-rss',
   user: 'admin',
@@ -10,9 +10,11 @@ const opts = {
   url: null
 }
 
+// Initialize events
 init()
 
 function init () {
+  // get data from chrome.storage
   const storageOpts = new Promise((resolve, reject) => {
     try {
       chrome.storage.sync.get(opts, resolve)
@@ -21,66 +23,80 @@ function init () {
     }
   })
 
+  // set opts from data and get count
   storageOpts
-    .then(setOpts)
+    .then(getOpts)
     .then(getCount)
-    .catch(console.log)
+    .catch(showError)
 
   listenEvents()
 }
 
+// Listen for events
 function listenEvents () {
   // TODO: Create a listener for chrome.storage
   // listen for changes in settings
 
   // listen for commands
   chrome.commands.onCommand.addListener(function (command) {
-    console.log('Command: ' + command)
     if (command === 'update') {
       getCount()
     } else if (command === 'open') {
-      openPage()
+      openFeed()
     }
   })
 
   // listen for badge click
-  chrome.browserAction.onClicked.addListener(openPage)
+  chrome.browserAction.onClicked.addListener(openFeed)
 
   // update every x (in ms)
   setInterval(getCount, opts.interval)
 }
 
-function setOpts (data) {
+// Display errors on badge
+function showError (e) {
+  console.error(e)
+  chrome.runtime.openOptionsPage()
+  chrome.browserAction.setBadgeBackgroundColor({ color: '#ef3b3b' }) // red
+  chrome.browserAction.setBadgeText({ text: 'e' })
+  chrome.browserAction.setTitle({ title: e })
+}
+
+// Get settings from chrome.storage
+function getOpts (data) {
   opts.host = data.host
   opts.interval = data.interval * 60000 // convert min to ms
   opts.mode = data.mode
   opts.url = data.host + '/public.php?op=getUnread&fresh=1&login=' + data.user // set url
 
   // check if opts are valid
-  if (opts.host.slice(0, 4) !== 'http') {
-    chrome.runtime.openOptionsPage()
-    throw new Error('Host is invalid.')
-  }
+  try {
+    if (opts.host.slice(0, 4) !== 'http') {
+      throw new Error('Host is invalid.')
+    }
 
-  if (opts.interval < 60000) {
-    chrome.runtime.openOptionsPage()
-    throw new Error('Interval is less than a minute and thus invalid.')
-  }
+    if (opts.interval < 60000) {
+      throw new Error('Interval is less than a minute and thus invalid.')
+    }
 
-  if (isNaN(opts.mode) === false) {
-    chrome.runtime.openOptionsPage()
-    throw new Error('Article mode is invalid.')
+    if (Number.isInteger(opts.mode) === false) {
+      throw new Error('Article mode is invalid.')
+    }
+  } catch (e) {
+    showError(e)
   }
 }
 
+// Get count from TT-RSS
 function getCount () {
   fetch(opts.url)
     .then(y => y.text())
     .then(y => y.split(';'))
     .then(updateUI) // args: [All, Fresh]
-    .catch(console.log)
+    .catch(showError)
 }
 
+// Update badge with count
 function updateUI (count) {
   try {
     if (count.length === 2) { // count is [unreadAll];[unreadFresh]
@@ -97,12 +113,10 @@ function updateUI (count) {
 
       chrome.browserAction.setBadgeBackgroundColor({ color: '#3b86ef' }) // blue
     } else {
-      count = 'error'
-      throw (count)
+      throw new Error('Invalid count. Fetch problem.')
     }
   } catch (e) {
-    console.log(e)
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#ef3b3b' }) // red
+    showError(e)
   }
 
   // construct date string
@@ -118,7 +132,8 @@ function updateUI (count) {
   }
 }
 
-function openPage () {
+// Open TT-RSS feed
+function openFeed () {
   let feedURL
   if (opts.mode === 1) {
     feedURL = opts.host + '/#f=-3&c=0' // -3 is fresh
