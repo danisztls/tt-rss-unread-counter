@@ -3,11 +3,11 @@
 
 // Defaults
 const opts = {
-  url: null,
   host: 'https://localhost/tt-rss',
   user: 'admin',
   mode: 0,
-  interval: 5
+  interval: 5,
+  url: null
 }
 
 init()
@@ -39,13 +39,14 @@ function listen () {
 }
 
 function setOpts (data) {
-  opts.url = data.host + '/public.php?op=getUnread&fresh=1&login=' + data.user // set url
+  opts.host = data.host
   opts.interval = data.interval * 60000 // convert min to ms
   opts.mode = data.mode
+  opts.url = data.host + '/public.php?op=getUnread&fresh=1&login=' + data.user // set url
 
   // check if opts are valid
-  if (opts.url.slice(0, 4) !== 'http') {
-    throw new Error('URL is invalid.')
+  if (opts.host.slice(0, 4) !== 'http') {
+    throw new Error('Host is invalid.')
   }
 
   if (opts.interval < 60000) {
@@ -97,4 +98,16 @@ function updateUI (count) {
     chrome.browserAction.setBadgeText({ text: count })
     chrome.browserAction.setTitle({ title: count + ' unread articles. Click to refresh.' })
   }
+}
+
+function openPage () {
+  // FIXME: not working
+  // -3 is fresh, -4 is all
+  let feedURL
+  if (opts.mode === 1) {
+    feedURL = opts.host + '/#f=-3&c=0'
+  } else {
+    feedURL = opts.host + '/#f=-4&c=0'
+  }
+  chrome.tabs.create({ url: feedURL })
 }

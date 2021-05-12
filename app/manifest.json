@@ -18,6 +18,7 @@
   "background": { "scripts": ["background.js"] },
   "permissions": [
     "storage",
+    "tabs",
     "http://*/tt-rss/*",
     "https://*/tt-rss/*"
   ]
