@@ -51,30 +51,32 @@ for (const opt of Object.entries(defaults)) {
   settings.push(new Setting(opt[0], opt[1]))
 }
 
+const statusBar = document.querySelector('#status')
+
 // MAIN
 // Get settings from chrome.storage (use default when missing)
-getOpts(defaults)
+getData(defaults)
 
 // Monitor click events
 window.onload = () => {
-  document.querySelector('#opt-save').onclick = saveOpts
+  document.querySelector('#opt-save').onclick = getOpts
   document.querySelector('#opt-reset').onclick = resetOpts
 }
 
 // LIB
-// Load settings from chrome.storage
-function getOpts (query) {
-  const data = new Promise((resolve, reject) => {
+// GET settings from chrome.storage
+function getData (query) {
+  const request = new Promise((resolve, reject) => {
     try {
       chrome.storage.sync.get(query, resolve)
     } catch (e) {
       reject(e)
     }
   })
-  data.then(setOpt)
+  request.then(setOpt)
 }
 
-// Set value for each option
+// SET value for each setting
 async function setOpt (data) {
   for (const opt of settings) {
     opt.value = data[opt.name]
@@ -82,8 +84,28 @@ async function setOpt (data) {
   }
 }
 
-// Save settings to chrome.storage
-function saveOpts () {
+// Display a status message
+function setStatus (text) {
+  // set message
+  statusBar.innerHTML = text
+  // clear after 3s
+  setTimeout(() => { statusBar.innerHTML = null }, 3000)
+}
+
+// SET settings to chrome.storage
+function setData (payload, message) {
+  const request = new Promise((resolve, reject) => {
+    try {
+      chrome.storage.sync.set(payload, resolve)
+    } catch (e) {
+      reject(e)
+    }
+  })
+  request.then(status => setStatus(message), console.log)
+}
+
+// GET settings values from objects
+function getOpts () {
   const payload = new Object() // eslint-disable-line no-new-object
   for (const opt of settings) {
     const data = opt.read()
@@ -92,7 +114,7 @@ function saveOpts () {
     payload[name] = value
     opt.clear()
   }
-  chrome.storage.sync.set(payload) // store opt
+  setData(payload, 'Options sucessfuly saved.') // store opts
 }
 
 // Reset settings to default values
@@ -100,5 +122,5 @@ async function resetOpts () {
   for (const opt of settings) {
     opt.reset()
   }
-  chrome.storage.sync.set(defaults)
+  setData(defaults, 'Options sucessfuly reset to defaults.') // store opts
 }
