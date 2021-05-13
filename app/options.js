@@ -32,7 +32,7 @@ class Setting {
       this.value = this.input.value
       this.clear()
     }
-    if (this.input.type === 'select-one') {
+    if (this.input.type === 'select-one' || this.input.type === 'number') {
       this.value = parseInt(this.value)
     }
     return [this.name, this.value]

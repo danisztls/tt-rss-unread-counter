@@ -1,7 +1,9 @@
 /* global chrome */
 // TODO: Use Service Worker to migrate to manifest v3
 
-// Set defaults
+/* SETTINGS
+   -------- */
+// defaults
 const opts = {
   host: 'https://localhost/tt-rss',
   user: 'admin',
@@ -10,64 +12,32 @@ const opts = {
   url: null
 }
 
-// Initialize events
-init()
+// invoke once
+getOpts().catch(setErrorBadge)
 
-function init () {
-  // get data from chrome.storage
-  const storageOpts = new Promise((resolve, reject) => {
+// GET from chrome.storage
+function getOpts () {
+  const storage = new Promise((resolve, reject) => {
     try {
       chrome.storage.sync.get(opts, resolve)
     } catch (e) {
       reject(e)
     }
   })
-
-  // set opts from data and get count
-  storageOpts
-    .then(getOpts)
+  return storage
+    .then(setOpts)
     .then(getCount)
-    .catch(showError)
-
-  listenEvents()
+    .catch(setErrorBadge)
 }
 
-// Listen for events
-function listenEvents () {
-  // TODO: Create a listener for chrome.storage
-  // listen for changes in settings
-
-  // listen for commands
-  chrome.commands.onCommand.addListener(function (command) {
-    if (command === 'update') {
-      getCount()
-    } else if (command === 'open') {
-      openFeed()
-    }
-  })
-
-  // listen for badge click
-  chrome.browserAction.onClicked.addListener(openFeed)
-
-  // update every x (in ms)
-  setInterval(getCount, opts.interval)
-}
-
-// Display errors on badge
-function showError (e) {
-  console.error(e)
-  chrome.runtime.openOptionsPage()
-  chrome.browserAction.setBadgeBackgroundColor({ color: '#ef3b3b' }) // red
-  chrome.browserAction.setBadgeText({ text: 'e' })
-  chrome.browserAction.setTitle({ title: e })
-}
-
-// Get settings from chrome.storage
-function getOpts (data) {
+// SET from chrome.storage
+function setOpts (data) {
   opts.host = data.host
   opts.interval = data.interval * 60000 // convert min to ms
   opts.mode = data.mode
   opts.url = data.host + '/public.php?op=getUnread&fresh=1&login=' + data.user // set url
+
+  isListening = addListeners()
 
   // check if opts are valid
   try {
@@ -83,19 +53,84 @@ function getOpts (data) {
       throw new Error('Article mode is invalid.')
     }
   } catch (e) {
-    showError(e)
+    removeListeners()
+    chrome.runtime.openOptionsPage()
+    setErrorBadge(e, true)
+    throw e // rethrow error so to catch it on promise chain
   }
 }
+/* LISTENERS
+   --------- */
 
-// Get count from TT-RSS
+/* const listen = {
+  opts: null,
+  alarm: null,
+  click: null,
+  cmds: null
+} */
+
+let listenAlarm, listenClick, listenCmds
+let isListening = false
+
+/* listenOpts is set by init() and remain till the end
+ * the others are set by setOpts() and cleared in case of invalid opts */
+
+const listenOpts = (changes) => {
+  const data = opts
+  for (const [key, { oldValue, newValue }] of Object.entries(changes)) { // eslint-disable-line no-unused-vars
+    data[key] = newValue
+  }
+  setOpts(data)
+}
+
+// listen for changes in chrome.storage
+chrome.storage.onChanged.addListener(listenOpts)
+
+// usage: isListening = addListeners()
+function addListeners () {
+  if (isListening === false) {
+    // update badge every interval period in ms
+    chrome.alarms.create(listenAlarm, { delayInMinutes: opts.interval, periodInMinutes: opts.interval })
+
+    // listen for badge clicks and open feed page
+    listenClick = chrome.browserAction.onClicked.addListener(openFeed)
+
+    // listen for commands from chrome shortcuts
+    listenCmds = chrome.commands.onCommand.addListener((command) => {
+      if (command === 'update') {
+        getCount()
+      } else if (command === 'open') {
+        openFeed()
+      }
+    })
+    return true
+  }
+  return false
+}
+
+// usage: isListening = removeListeners()
+function removeListeners () {
+  if (isListening === true) {
+    clearInterval(listenAlarm)
+    chrome.browserAction.onClicked.removeListener(listenClick)
+    chrome.commands.onCommand.removeListener(listenCmds)
+  }
+  return false
+}
+
+/* UPDATE
+   ------ */
+// GET count from TT-RSS
 function getCount () {
   fetch(opts.url)
     .then(y => y.text())
     .then(y => y.split(';'))
     .then(updateUI) // args: [All, Fresh]
-    .catch(showError)
+    .catch(setErrorBadge)
 }
 
+/* UI
+   -- */
 // Update badge with count
 function updateUI (count) {
   try {
@@ -113,10 +148,10 @@ function updateUI (count) {
 
       chrome.browserAction.setBadgeBackgroundColor({ color: '#3b86ef' }) // blue
     } else {
-      throw new Error('Invalid count. Fetch problem.')
+      throw new Error('Invalid count.')
     }
   } catch (e) {
-    showError(e)
+    setErrorBadge(e, true)
   }
 
   // construct date string
@@ -132,7 +167,7 @@ function updateUI (count) {
   }
 }
 
-// Open TT-RSS feed
+// Open TT-RSS feed page
 function openFeed () {
   let feedURL
   if (opts.mode === 1) {
@@ -141,4 +176,17 @@ function openFeed () {
     feedURL = opts.host + '/#f=-4&c=0' // -4 is all
   }
   chrome.tabs.create({ url: feedURL })
+}
+
+/* ERROR
+   ----- */
+// Display error state on badge
+// usage: setErrorBadge(error, setTitle?)
+function setErrorBadge (e, shouldSetTitle) {
+  console.error(e)
+  chrome.browserAction.setBadgeBackgroundColor({ color: '#ef3b3b' }) // red
+  chrome.browserAction.setBadgeText({ text: 'e' })
+  if (shouldSetTitle === true) {
+    chrome.browserAction.setTitle({ title: e.message })
+  }
 }

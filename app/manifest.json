@@ -30,6 +30,7 @@
   },
   "background": { "scripts": ["background.js"] },
   "permissions": [
+    "alarms",
     "storage",
     "tabs",
     "http://*/tt-rss/*",
