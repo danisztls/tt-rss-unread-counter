@@ -114,7 +114,7 @@ function getOpts () {
     payload[name] = value
     opt.clear()
   }
-  setData(payload, 'Options sucessfuly saved.') // store opts
+  setData(payload, 'Options successfully saved.') // store opts
 }
 
 // Reset settings to default values
@@ -122,5 +122,5 @@ async function resetOpts () {
   for (const opt of settings) {
     opt.reset()
   }
-  setData(defaults, 'Options sucessfuly reset to defaults.') // store opts
+  setData(defaults, 'Options successfully reset to defaults.') // store opts
 }
