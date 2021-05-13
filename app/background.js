@@ -1,5 +1,7 @@
 /* global chrome */
 // TODO: Use Service Worker to migrate to manifest v3
+// scripts will get terminated arbitrarily
+// treat chrome.storage as source of truth
 
 /* SETTINGS
    -------- */
@@ -93,7 +95,7 @@ function addListeners () {
     chrome.alarms.create(listenAlarm, { delayInMinutes: opts.interval, periodInMinutes: opts.interval })
 
     // listen for badge clicks and open feed page
-    listenClick = chrome.browserAction.onClicked.addListener(openFeed)
+    listenClick = chrome.action.onClicked.addListener(openFeed)
 
     // listen for commands from chrome shortcuts
     listenCmds = chrome.commands.onCommand.addListener((command) => {
@@ -112,7 +114,7 @@ function addListeners () {
 function removeListeners () {
   if (isListening === true) {
     clearInterval(listenAlarm)
-    chrome.browserAction.onClicked.removeListener(listenClick)
+    chrome.action.onClicked.removeListener(listenClick)
     chrome.commands.onCommand.removeListener(listenCmds)
   }
   return false
@@ -146,7 +148,7 @@ function updateUI (count) {
         count = count.slice(0, -3) + 'K'
       }
 
-      chrome.browserAction.setBadgeBackgroundColor({ color: '#3b86ef' }) // blue
+      chrome.action.setBadgeBackgroundColor({ color: '#3b86ef' }) // blue
     } else {
       throw new Error('Invalid count.')
     }
@@ -159,11 +161,11 @@ function updateUI (count) {
 
   // update badge
   if (count === '0') { // hide badge if zero
-    chrome.browserAction.setBadgeText({ text: null })
-    chrome.browserAction.setTitle({ title: 'No unread articles. Updated at ' + updateTime })
+    chrome.action.setBadgeText({ text: null })
+    chrome.action.setTitle({ title: 'No unread articles. Updated at ' + updateTime })
   } else {
-    chrome.browserAction.setBadgeText({ text: count })
-    chrome.browserAction.setTitle({ title: count + ' unread articles. Updated at ' + updateTime })
+    chrome.action.setBadgeText({ text: count })
+    chrome.action.setTitle({ title: count + ' unread articles. Updated at ' + updateTime })
   }
 }
 
@@ -184,9 +186,9 @@ function openFeed () {
 // usage: setErrorBadge(error, setTitle?)
 function setErrorBadge (e, shouldSetTitle) {
   console.error(e)
-  chrome.browserAction.setBadgeBackgroundColor({ color: '#ef3b3b' }) // red
-  chrome.browserAction.setBadgeText({ text: 'e' })
+  chrome.action.setBadgeBackgroundColor({ color: '#ef3b3b' }) // red
+  chrome.action.setBadgeText({ text: 'e' })
   if (shouldSetTitle === true) {
-    chrome.browserAction.setTitle({ title: e.message })
+    chrome.action.setTitle({ title: e.message })
   }
 }
