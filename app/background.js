@@ -161,7 +161,7 @@ function updateUI (count) {
 
   // update badge
   if (count === '0') { // hide badge if zero
-    chrome.action.setBadgeText({ text: null })
+    chrome.action.setBadgeText({ text: '' })
     chrome.action.setTitle({ title: 'No unread articles. Updated at ' + updateTime })
   } else {
     chrome.action.setBadgeText({ text: count })
