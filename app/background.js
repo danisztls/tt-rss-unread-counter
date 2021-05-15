@@ -1,7 +1,4 @@
 /* global chrome */
-// TODO: Use Service Worker to migrate to manifest v3
-// scripts will get terminated arbitrarily
-// treat chrome.storage as source of truth
 
 /* SETTINGS
    -------- */
@@ -35,7 +32,7 @@ function getOpts () {
 // SET from chrome.storage
 function setOpts (data) {
   opts.host = data.host
-  opts.interval = data.interval * 60000 // convert min to ms
+  opts.interval = data.interval
   opts.mode = data.mode
   opts.url = data.host + '/public.php?op=getUnread&fresh=1&login=' + data.user // set url
 
@@ -47,7 +44,7 @@ function setOpts (data) {
       throw new Error('Host is invalid.')
     }
 
-    if (opts.interval < 60000) {
+    if (opts.interval < 1) {
       throw new Error('Interval is less than a minute and thus invalid.')
     }
 
@@ -91,7 +88,7 @@ chrome.storage.onChanged.addListener(listenOpts)
 // usage: isListening = addListeners()
 function addListeners () {
   if (isListening === false) {
-    // update badge every interval period in ms
+    // update badge every interval period in minutes
     chrome.alarms.create(listenAlarm, { delayInMinutes: opts.interval, periodInMinutes: opts.interval })
 
     // listen for badge clicks and open feed page
