@@ -1,7 +1,7 @@
 {
-  "name": "tt-rss-unread-counter-plugin-helper",
-  "version": "1.0.0",
-  "description": "DevOps helper for TT-RSS Unread Counter Plugin",
+  "name": "chromium-extensions-helper",
+  "version": "1.0",
+  "description": "Helper for development tasks with Chromium extensions",
   "main": "index.js",
   "scripts": {
     "test": "echo \"No test is especified\" && exit 1"
