@@ -89,7 +89,7 @@ chrome.storage.onChanged.addListener(listenOpts)
 function addListeners () {
   if (isListening === false) {
     // create an alarm with interval as period
-    chrome.alarms.create('update', { delayInMinutes: opts.interval, periodInMinutes: opts.interval })
+    chrome.alarms.create('periodic-update', { delayInMinutes: opts.interval, periodInMinutes: opts.interval })
 
     // listen for alarm event to update badge
     listenAlarm = chrome.alarms.onAlarm.addListener(getCount)
@@ -113,7 +113,8 @@ function addListeners () {
 // usage: isListening = removeListeners()
 function removeListeners () {
   if (isListening === true) {
-    clearInterval(listenAlarm)
+    chrome.alarms.clear('periodic-update')
+    chrome.alarms.onAlarm.removeListener(listenAlarm)
     chrome.action.onClicked.removeListener(listenClick)
     chrome.commands.onCommand.removeListener(listenCmds)
   }
