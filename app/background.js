@@ -88,8 +88,11 @@ chrome.storage.onChanged.addListener(listenOpts)
 // usage: isListening = addListeners()
 function addListeners () {
   if (isListening === false) {
-    // update badge every interval period in minutes
-    chrome.alarms.create(listenAlarm, { delayInMinutes: opts.interval, periodInMinutes: opts.interval })
+    // create an alarm with interval as period
+    chrome.alarms.create('update', { delayInMinutes: opts.interval, periodInMinutes: opts.interval })
+
+    // listen for alarm event to update badge
+    listenAlarm = chrome.alarms.onAlarm.addListener(getCount)
 
     // listen for badge clicks and open feed page
     listenClick = chrome.action.onClicked.addListener(openFeed)
