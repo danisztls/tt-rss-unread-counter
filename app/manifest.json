@@ -37,8 +37,7 @@
   },
   "permissions": [
     "alarms",
-    "storage",
-    "tabs"
+    "storage"
   ],
   "host_permissions": [
     "*://*/tt-rss/*",
