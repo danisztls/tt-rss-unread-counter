@@ -2,6 +2,8 @@
 
 Display in a badge [Tiny Tiny RSS](https://tt-rss.org/) count of unread articles.
 
+NOTE: I stopped using TT-RSS as my feed reader a long time ago and have no interest in maintaining this.
+
 ## Install
 [![Chrome](img/chrome.png "Chrome")](https://chrome.google.com/webstore/detail/tt-rss-unread-counter/gmehniamdebnmcckmfiedgfnijhhcldb)
 
